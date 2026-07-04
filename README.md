@@ -4,123 +4,168 @@ MCP server cho phép AI agent đọc/ghi/format Google Sheets qua API v4.
 
 ---
 
-## 👩‍💼 DÀNH CHO NGƯỜI DÙNG (không cần biết code)
+## 👩‍💼 DÀNH CHO NGƯỜI DÙNG
 
-### Bạn cần gì?
+Bạn không cần biết code. Chỉ cần mở Antigravity 2.0 (hoặc AI coding agent khác), **paste đoạn prompt bên dưới**, rồi làm theo khi AI hỏi.
 
-1. **Máy tính** có cài [Node.js](https://nodejs.org/) (tải bản LTS, cài Next-Next-Finish)
-2. **Antigravity 2.0** (đã cài trên máy)
-3. **Tài khoản Gmail** (cá nhân hoặc công ty đều được)
-
-### Cách cài — chỉ cần làm 1 lần
-
-**Bước 1:** Mở Antigravity 2.0, paste NGUYÊN VĂN đoạn prompt sau:
+### Paste prompt này vào Antigravity 2.0:
 
 ```
-Tôi cần bạn cài đặt MCP server "maru-sheets-mcp" để tôi có thể đọc/ghi Google Sheets.
+Tôi cần bạn cài đặt MCP server "maru-sheets-mcp" để tôi có thể đọc và ghi Google Sheets từ đây.
 
-Hướng dẫn:
-1. Clone repo: git clone https://github.com/leaddaruma-web/maru-sheets-mcp.git
-2. Vào thư mục: cd maru-sheets-mcp
-3. Cài dependencies: npm install
-4. Chạy xác thực: npm run auth (sẽ mở trình duyệt để tôi đăng nhập Gmail)
-5. Sau khi tôi đăng nhập xong, cấu hình MCP server vào tool settings với:
-   - Command: node
-   - Args: src/sheets-server.js
-   - Working directory: đường dẫn thư mục maru-sheets-mcp vừa clone
+Đọc file README.md trong repo https://github.com/leaddaruma-web/maru-sheets-mcp — phần "DÀNH CHO AI CODING AGENT" có hướng dẫn chi tiết từng bước.
 
-Bắt đầu từ bước 1.
+Làm hết tất cả các bước giúp tôi — bao gồm cả kiểm tra/cài Node.js nếu máy chưa có. Tôi chỉ cần click "Cho phép" khi trình duyệt mở ra hỏi quyền Gmail.
+
+Bắt đầu.
 ```
 
-**Bước 2:** Khi trình duyệt mở ra → đăng nhập Gmail → click **"Cho phép"** (hoặc "Allow")
-
-**Bước 3:** Quay lại Antigravity, đợi AI agent hoàn tất cấu hình → **XONG!**
+Sau đó AI sẽ tự làm mọi thứ. Bạn chỉ cần:
+- **Click "Cho phép"** khi trình duyệt mở ra hỏi quyền Gmail (1 lần duy nhất)
+- **Restart Antigravity** sau khi AI báo cấu hình xong (nếu AI yêu cầu)
 
 ### Sau khi cài xong, bạn có thể bảo AI:
 
-- *"Đọc dữ liệu từ Sheet [link] tab Nhật ký, cột A đến K"*
-- *"Ghi danh sách sau vào Sheet [link] tab Tổng hợp, bắt đầu từ ô A2"*
-- *"Tạo tab mới tên 'Tháng 7' trong Sheet [link]"*
-- *"Format header tab Tổng hợp: nền navy, chữ trắng, bold"*
-- *"Set công thức =SUM(B2:B100) vào ô B101"*
+- *"Đọc dữ liệu từ Sheet [dán link Sheet] tab Nhật ký, cột A đến K"*
+- *"Ghi danh sách sau vào Sheet [dán link Sheet] bắt đầu từ ô A2: ..."*
+- *"Tạo tab mới tên 'Tháng 7' trong Sheet [dán link Sheet]"*
+- *"Format header: nền xanh đậm, chữ trắng, in đậm"*
+- *"Set công thức tính tổng cột B vào ô B101"*
 
-### Lưu ý quan trọng
+### Lưu ý
 
-- **Sheet phải được share** cho Gmail bạn đã đăng nhập lúc cài đặt (ít nhất quyền Editor nếu muốn ghi)
-- **spreadsheetId** là đoạn mã trong URL Sheet: `https://docs.google.com/spreadsheets/d/`**đoạn-này-là-ID**`/edit`
-- Nếu gặp lỗi "insufficient permission" → mở Sheet đó, click Share, thêm Gmail của bạn
+- **Sheet phải được share cho Gmail bạn** — nếu AI báo "insufficient permission", mở Sheet đó → click Share → thêm Gmail của bạn (quyền Editor)
+- **Chỉ cần cài 1 lần** — những lần sau mở Antigravity là dùng được luôn
 
 ---
 
-## 🤖 DÀNH CHO AI CODING AGENT — đọc phần này để tự cài đặt
+## 🤖 DÀNH CHO AI CODING AGENT
 
-### Yêu cầu
-- Node.js >= 18
-- npm
+> Phần này dành cho AI agent đọc và tự thực hiện. Người dùng không cần đọc phần này.
 
-### Cài đặt (3 bước)
+### Bước 0 — Kiểm tra và cài Node.js (nếu chưa có)
 
 ```bash
-# 1. Cài dependencies
-npm install
-
-# 2. Chạy xác thực OAuth (chỉ cần 1 lần)
-npm run auth
-# → Trình duyệt sẽ mở ra, người dùng đăng nhập Gmail rồi click "Cho phép"
-# → File token.json được tạo tự động
-
-# 3. Chạy thử server
-npm start
+node --version
 ```
 
-### Cấu hình MCP trong AI tool
+Nếu lệnh trên báo lỗi hoặc version < 18, cài Node.js:
+
+- **Windows**: tải và chạy installer từ https://nodejs.org/en/download/ (chọn bản LTS, chạy file .msi, chọn tất cả mặc định). Sau khi cài xong cần mở terminal mới để `node` có trong PATH.
+- **macOS**: `brew install node` hoặc tải installer từ https://nodejs.org/
+- **Linux**: `curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs`
+
+Kiểm tra lại sau khi cài:
+```bash
+node --version  # phải >= 18
+npm --version   # phải có
+```
+
+### Bước 1 — Clone repo
+
+```bash
+git clone https://github.com/leaddaruma-web/maru-sheets-mcp.git
+cd maru-sheets-mcp
+```
+
+Nếu máy chưa có git:
+- **Windows**: tải từ https://git-scm.com/download/win, cài mặc định
+- **macOS**: `xcode-select --install`
+- **Linux**: `sudo apt-get install git`
+
+### Bước 2 — Cài dependencies
+
+```bash
+npm install
+```
+
+### Bước 3 — Xác thực Gmail (chỉ 1 lần)
+
+```bash
+npm run auth
+```
+
+Lệnh này sẽ:
+1. Mở trình duyệt tại URL xác thực Google
+2. Người dùng đăng nhập Gmail và click "Cho phép" / "Allow"
+3. Trình duyệt chuyển hướng về localhost → file `token.json` được tạo tự động
+
+**BÁO CHO NGƯỜI DÙNG:** "Trình duyệt sẽ mở ra — bạn đăng nhập Gmail rồi click Cho phép nhé."
+
+Đợi cho đến khi terminal hiện `✓ Đã lưu token.json` rồi tiếp tục.
+
+### Bước 4 — Cấu hình MCP server
+
+Ghi nhớ đường dẫn tuyệt đối tới thư mục `maru-sheets-mcp` vừa clone (ví dụ `D:\Projects\maru-sheets-mcp` hoặc `/Users/ten/maru-sheets-mcp`).
 
 Thêm vào file cấu hình MCP của tool đang dùng:
 
-**Claude Code** (`.claude.json` hoặc `claude_desktop_config.json`):
+**Claude Code** — file `claude_desktop_config.json` hoặc `.claude.json`:
 ```json
 {
   "mcpServers": {
     "maru-sheets": {
       "command": "node",
       "args": ["src/sheets-server.js"],
-      "cwd": "<đường-dẫn-tới-thư-mục-này>"
+      "cwd": "<đường-dẫn-tuyệt-đối-tới-thư-mục-maru-sheets-mcp>"
     }
   }
 }
 ```
 
-**Antigravity / tool khác** — tương tự, trỏ command `node` + args `src/sheets-server.js` + cwd là thư mục chứa repo này.
+**Antigravity 2.0** — vào Settings → MCP Servers → thêm server mới:
+- Name: `maru-sheets`
+- Command: `node`
+- Arguments: `src/sheets-server.js`
+- Working directory: `<đường-dẫn-tuyệt-đối-tới-thư-mục-maru-sheets-mcp>`
+
+**Tool khác** — tương tự, trỏ command `node`, args `src/sheets-server.js`, cwd là thư mục chứa repo.
+
+### Bước 5 — Kiểm tra
+
+Sau khi cấu hình, restart tool (hoặc reload MCP) rồi thử:
+- Gọi tool `list_sheets` với `spreadsheetId` bất kỳ mà Gmail đã auth có quyền truy cập
+- Nếu trả về danh sách tab → **thành công**
+
+**BÁO CHO NGƯỜI DÙNG:** "Đã cài xong! Bạn có thể restart Antigravity rồi thử bảo tôi đọc/ghi Sheet."
 
 ### Các tool có sẵn sau khi cài
 
-| Tool | Mô tả |
-|------|--------|
-| `list_sheets` | Liệt kê các tab trong 1 spreadsheet |
-| `read_range` | Đọc giá trị 1 vùng (A1 notation) |
-| `write_range` | Ghi giá trị 2D vào 1 vùng |
-| `set_formula` | Set công thức vào 1 ô (locale VN: dùng `;`) |
-| `add_sheet` | Thêm tab mới |
-| `delete_sheet` | Xoá tab |
-| `rename_sheet` | Đổi tên tab |
-| `freeze_rows` | Đóng băng N hàng đầu |
-| `set_format` | Tô nền + chữ + bold cho 1 vùng |
-| `set_column_width` | Đặt chiều rộng cột |
-| `merge_cells` | Merge ô |
-| `set_borders` | Đặt border |
-| `set_number_format` | Định dạng số/ngày |
-| `set_data_validation` | Dropdown validation |
-| `set_conditional_format` | Conditional formatting |
-| `set_text_wrap_align` | Wrap text + căn chỉnh |
-| `set_protected_range` | Bảo vệ vùng |
-| `apply_template` | Áp template nhiều request 1 lúc |
+| Tool | Mô tả | Tham số chính |
+|------|--------|---------------|
+| `list_sheets` | Liệt kê các tab | spreadsheetId |
+| `read_range` | Đọc giá trị 1 vùng (A1 notation) | spreadsheetId, range |
+| `write_range` | Ghi giá trị 2D vào 1 vùng | spreadsheetId, range, values |
+| `set_formula` | Set công thức vào 1 ô | spreadsheetId, cell, formula |
+| `add_sheet` | Thêm tab mới | spreadsheetId, title |
+| `delete_sheet` | Xoá tab | spreadsheetId, sheetTitle |
+| `rename_sheet` | Đổi tên tab | spreadsheetId, oldTitle, newTitle |
+| `freeze_rows` | Đóng băng N hàng đầu | spreadsheetId, sheetTitle, rows |
+| `set_format` | Tô nền + chữ + bold | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol, bgHex, fontHex, bold |
+| `set_column_width` | Đặt chiều rộng cột | spreadsheetId, sheetTitle, startCol, endCol, width |
+| `merge_cells` | Merge ô | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol |
+| `set_borders` | Đặt border | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol |
+| `set_number_format` | Định dạng số/ngày | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol, pattern |
+| `set_data_validation` | Dropdown validation | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol, values |
+| `set_conditional_format` | Conditional formatting | spreadsheetId, sheetTitle, range, type, values, bgHex |
+| `set_text_wrap_align` | Wrap text + căn chỉnh | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol |
+| `set_protected_range` | Bảo vệ vùng | spreadsheetId, sheetTitle, startRow, endRow, startCol, endCol |
+| `apply_template` | Áp nhiều request 1 lúc (batchUpdate) | spreadsheetId, requests |
 
-### Lưu ý
+### Lưu ý kỹ thuật
+
 - Công thức Google Sheets locale Việt Nam dùng dấu `;` thay `,` — ví dụ: `=IF(A1>5;"Đạt";"Chưa đạt")`
 - `spreadsheetId` lấy từ URL: `https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit`
 - Muốn truy cập Sheet của người khác → người đó phải share (Viewer/Editor) cho Gmail đã auth
+- `set_format` dùng gridRange 0-based (hàng/cột bắt đầu từ 0)
 
 ### Xử lý lỗi thường gặp
-- `Chưa có token.json` → chạy `npm run auth`
-- `insufficient permission` → Sheet chưa được share cho Gmail đã đăng nhập
-- `Không thấy tab "..."` → kiểm tra tên tab chính xác (có dấu, có khoảng trắng)
+
+| Lỗi | Nguyên nhân | Cách sửa |
+|-----|-------------|----------|
+| `Chưa có token.json` | Chưa chạy auth | `npm run auth` |
+| `insufficient permission` | Sheet chưa share cho Gmail | Mở Sheet → Share → thêm Gmail |
+| `Không thấy tab "..."` | Tên tab sai | Kiểm tra tên chính xác (có dấu, khoảng trắng) |
+| `node: command not found` | Chưa cài Node.js | Cài Node.js theo Bước 0 |
+| `git: command not found` | Chưa cài Git | Cài Git theo Bước 1 |
+| `ECONNREFUSED` / `invalid_grant` | Token hết hạn | Xoá `token.json`, chạy lại `npm run auth` |
